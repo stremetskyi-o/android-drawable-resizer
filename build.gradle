@@ -1,0 +1,16 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    compile 'com.android.tools.build:gradle:0.12.2'
+}
+
+group='com.github.forsety'
+version='0.1'
+
+uploadArchives.repositories.mavenLocal()

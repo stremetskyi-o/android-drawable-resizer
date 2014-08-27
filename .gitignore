@@ -1,0 +1,15 @@
+.gradle
+/build
+
+## Directory-based project format
+.idea/
+/*.iml
+
+## File-based project format
+*.ipr
+*.iws
+
+## Additional for IntelliJ
+out/
+
+local.properties
