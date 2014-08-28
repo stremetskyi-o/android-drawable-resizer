@@ -1,7 +1,10 @@
 package com.github.forsety.task;
 
 import com.android.build.gradle.api.BaseVariant;
+import com.android.build.gradle.tasks.MergeResources;
+import com.android.ide.common.res2.ResourceSet;
 import com.github.forsety.ADRExtension;
+import com.github.forsety.BatchDrawableResizer;
 import com.github.forsety.Density;
 
 import org.gradle.api.DefaultTask;
@@ -30,6 +33,7 @@ public class ResizeDrawablesTask extends DefaultTask {
         Density baseDensity = adr.getBaseDensityInfo();
         List<File> inputResDirs = getInputDirs();
         List<File> outputResDirs = getOutputDirs(inputResDirs);
+        List<BatchDrawableResizer> resizers = new LinkedList<>();
         Pattern drawableFolderPattern = Pattern.compile("^drawable-.*" + baseDensity.getQualifierName() + ".*$");
         for (int i = adr.getMinDensityInfo().ordinal(); i < adr.getBaseDensityInfo().ordinal(); i++) {
             Density currentDensity = Density.values()[i];
@@ -42,9 +46,26 @@ public class ResizeDrawablesTask extends DefaultTask {
                     File outputDrawableDir = new File(outputResDir, intputDrawableDir.getName().replace(baseDensity.getQualifierName(), currentDensity.getQualifierName()));
                     if (!outputDrawableDir.exists())
                         outputDrawableDir.mkdirs();
+                    BatchDrawableResizer resizer = new BatchDrawableResizer(intputDrawableDir, outputDrawableDir, ((double) currentDensity.getValue()) / baseDensity.getValue());
+                    resizer.start();
+                    resizers.add(resizer);
                 });
             });
         }
+        try {
+            for (BatchDrawableResizer resizer : resizers)
+                resizer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Add output res dirs to resource merger
+        MergeResources mergeTask = variant.getMergeResources();
+        List<ResourceSet> mergeSets = mergeTask.getInputResourceSets();
+        ResourceSet adrSet = new ResourceSet(variant.getName()+ "ADR");
+        adrSet.addSources(outputResDirs);
+        mergeSets.add(adrSet);
+        mergeTask.setInputResourceSets(mergeSets);
     }
 
     private List<File> getInputDirs() {
