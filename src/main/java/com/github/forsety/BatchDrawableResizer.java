@@ -37,8 +37,11 @@ public class BatchDrawableResizer extends Thread {
             return DEFAULT_EXTENSIONS.contains(extension) && !s.endsWith(".9." + extension); // Exclude 9-patches
         })).forEach(input -> {
             try {
-                resizeDrawable(input, new File(outputDir, input.getName()), getExtension(input.getName()), ratio);
-                resizedDrawablesCount++;
+                File output = new File(outputDir, input.getName());
+                if (!output.exists() || input.lastModified() > output.lastModified()) {
+                    resizeDrawable(input, output, getExtension(input.getName()), ratio);
+                    resizedDrawablesCount++;
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

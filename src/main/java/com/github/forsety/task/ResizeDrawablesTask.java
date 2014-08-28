@@ -52,12 +52,6 @@ public class ResizeDrawablesTask extends DefaultTask {
                 });
             });
         }
-        try {
-            for (BatchDrawableResizer resizer : resizers)
-                resizer.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Add output res dirs to resource merger
         MergeResources mergeTask = variant.getMergeResources();
@@ -66,6 +60,17 @@ public class ResizeDrawablesTask extends DefaultTask {
         adrSet.addSources(outputResDirs);
         mergeSets.add(adrSet);
         mergeTask.setInputResourceSets(mergeSets);
+
+        try {
+            for (BatchDrawableResizer resizer : resizers)
+                resizer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        int totalDrawablesResized = 0;
+        for (BatchDrawableResizer resizer : resizers)
+            totalDrawablesResized += resizer.getResizedDrawablesCount();
+        setDidWork(totalDrawablesResized > 0);
     }
 
     private List<File> getInputDirs() {
