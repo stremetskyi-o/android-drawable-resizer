@@ -2,12 +2,13 @@ apply plugin: 'maven'
 apply plugin: 'java'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
     compile gradleApi()
     compile 'com.android.tools.build:gradle:0.12.2'
+    compile 'org.imgscalr:imgscalr-lib:4.2'
 }
 
 group='com.github.forsety'
