@@ -13,18 +13,18 @@ Usage
     1. Import this project to your Android Studio and run 'install' gradle task. After this project 
         will be available from your local Maven repository.
     2. Add this to your Android project 'build.gradle' file
-    ```groovy
-    buildscript {
-        repositories {
-            mavenLocal()
-        }
-        dependencies {
-            classpath 'com.github.forsety:adr:0.1'
-        }
+```groovy
+buildscript {
+    repositories {
+        mavenLocal()
     }
-    
-    apply plugin: 'adr'
-    ```
+    dependencies {
+        classpath 'com.github.forsety:adr:0.1'
+    }
+}
+
+apply plugin: 'com.github.forsety.adr'
+```
 
 _Note: Download and install [JDK8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) if you haven't already.
 Also set it as project default JDK and don't worry, your Android projects will build just fine._ 
