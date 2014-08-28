@@ -33,11 +33,11 @@ Configuration
 -------------
 
 In your 'build.gradle' file add:
-    ```groovy
-    adr {
-        minDensity "mdpi"
-        baseDensity "xxhdpi"
-        generateTvDpi false
-    }
-    ```
+```groovy
+adr {
+    minDensity "mdpi"
+    baseDensity "xxhdpi"
+    generateTvDpi false
+}
+```
 Example shows default configuration, so if it suits your needs - you don't need configuration at all.
