@@ -1,12 +1,18 @@
 package com.github.forsety;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 import org.imgscalr.Scalr;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -24,6 +30,15 @@ public class BatchDrawableResizer extends Thread {
     private File outputDir;
     private double ratio;
     private int resizedDrawablesCount = 0;
+    private static Cache<File, BufferedImage> cache = CacheBuilder.newBuilder()
+            .weigher((File key, BufferedImage value) -> {
+                DataBuffer buff = value.getRaster().getDataBuffer();
+                int bytes = buff.getSize() * DataBuffer.getDataTypeSize(buff.getDataType()) / 8;
+                return bytes / 1024;
+            })
+            .maximumWeight(64 * 1024)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            .build();
 
     public BatchDrawableResizer(File inputDir, File outputDir, double ratio) {
         this.inputDir = inputDir;
@@ -53,7 +68,12 @@ public class BatchDrawableResizer extends Thread {
     }
 
     public static void resizeDrawable(File input, File output, String outputExtension, double ratio) throws IOException {
-        BufferedImage inputImg = ImageIO.read(input);
+        BufferedImage inputImg;
+        try {
+            inputImg = cache.get(input, () -> ImageIO.read(input));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
         BufferedImage outputImg = Scalr.resize(inputImg, Method.QUALITY, Mode.FIT_TO_WIDTH, (int) (inputImg.getWidth() * ratio), OP_ANTIALIAS);
         ImageIO.write(outputImg, outputExtension, output);
     }
