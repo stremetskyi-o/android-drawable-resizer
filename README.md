@@ -9,10 +9,24 @@ changed and stored under the project 'build' folder.
 Usage
 -----
 
-* From local Maven repository
-    1. Import this project to your Android Studio and run 'install' gradle task. After this project 
+* From jcenter:
+  * Add this to your Android project 'build.gradle' file
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.forsety:adr:0.1'
+    }
+}
+
+apply plugin: 'com.github.forsety.adr'
+```
+* From local Maven repository:
+    * Import this project to your Android Studio and run 'install' gradle task. After this project 
         will be available from your local Maven repository.
-    2. Add this to your Android project 'build.gradle' file
+    * Add this to your Android project 'build.gradle' file
 ```groovy
 buildscript {
     repositories {
