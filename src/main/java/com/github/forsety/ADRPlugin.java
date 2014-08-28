@@ -19,6 +19,7 @@ public class ADRPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project target) {
+        target.getExtensions().create("adr", ADRExtension.class);
         target.afterEvaluate(project -> {
             if (target.getPlugins().hasPlugin(AppPlugin.class))
                 target.getExtensions().findByType(AppExtension.class).getApplicationVariants().whenObjectAdded(appVariant -> setup(target, appVariant));
