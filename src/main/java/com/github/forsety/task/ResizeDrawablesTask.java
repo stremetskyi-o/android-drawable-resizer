@@ -34,7 +34,7 @@ public class ResizeDrawablesTask extends DefaultTask {
         List<File> inputResDirs = getInputDirs();
         List<File> outputResDirs = getOutputDirs(inputResDirs);
         List<BatchDrawableResizer> resizers = new LinkedList<>();
-        Pattern drawableFolderPattern = Pattern.compile("^drawable-.*" + baseDensity.getQualifierName() + ".*$");
+        Pattern drawableFolderPattern = Pattern.compile("^(drawable|mipmap)-.*" + baseDensity.getQualifierName() + ".*$");
         for (int i = adr.getMinDensityInfo().ordinal(); i < adr.getBaseDensityInfo().ordinal(); i++) {
             Density currentDensity = Density.values()[i];
             if (currentDensity == Density.TVDPI && !adr.isGenerateTvDpi())
