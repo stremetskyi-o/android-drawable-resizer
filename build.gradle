@@ -7,7 +7,7 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    compile 'com.android.tools.build:gradle:0.12.2'
+    compile 'com.android.tools.build:gradle:1.5.0'
     compile 'org.imgscalr:imgscalr-lib:4.2'
 }
 
