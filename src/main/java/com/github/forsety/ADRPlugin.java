@@ -3,10 +3,10 @@ package com.github.forsety;
 import com.android.build.gradle.AppExtension;
 import com.android.build.gradle.AppPlugin;
 import com.android.build.gradle.LibraryExtension;
+import com.android.build.gradle.LibraryPlugin;
 import com.android.build.gradle.api.BaseVariant;
 import com.android.build.gradle.tasks.MergeResources;
 import com.github.forsety.task.ResizeDrawablesTask;
-
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
@@ -23,9 +23,9 @@ public class ADRPlugin implements Plugin<Project> {
         target.afterEvaluate(project -> {
             target.getExtensions().findByType(ADRExtension.class).validate();
             if (target.getPlugins().hasPlugin(AppPlugin.class))
-                target.getExtensions().findByType(AppExtension.class).getApplicationVariants().whenObjectAdded(appVariant -> setup(target, appVariant));
-            else if (target.getPlugins().hasPlugin(AppPlugin.class))
-                target.getExtensions().findByType(LibraryExtension.class).getLibraryVariants().whenObjectAdded(libraryVariant -> setup(target, libraryVariant));
+                target.getExtensions().findByType(AppExtension.class).getApplicationVariants().all(appVariant -> setup(target, appVariant));
+            else if (target.getPlugins().hasPlugin(LibraryPlugin.class))
+                target.getExtensions().findByType(LibraryExtension.class).getLibraryVariants().all(libraryVariant -> setup(target, libraryVariant));
             else
                 throw new RuntimeException("No android plugin found");
         });
