@@ -23,9 +23,9 @@ public class ADRPlugin implements Plugin<Project> {
         target.afterEvaluate(project -> {
             target.getExtensions().findByType(ADRExtension.class).validate();
             if (target.getPlugins().hasPlugin(AppPlugin.class))
-                target.getExtensions().findByType(AppExtension.class).getApplicationVariants().whenObjectAdded(appVariant -> setup(target, appVariant));
+                target.getExtensions().findByType(AppExtension.class).getApplicationVariants().all(appVariant -> setup(target, appVariant));
             else if (target.getPlugins().hasPlugin(AppPlugin.class))
-                target.getExtensions().findByType(LibraryExtension.class).getLibraryVariants().whenObjectAdded(libraryVariant -> setup(target, libraryVariant));
+                target.getExtensions().findByType(LibraryExtension.class).getLibraryVariants().all(libraryVariant -> setup(target, libraryVariant));
             else
                 throw new RuntimeException("No android plugin found");
         });
